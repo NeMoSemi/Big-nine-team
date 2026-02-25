@@ -1,0 +1,23 @@
+.status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge--open {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-badge--in_progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge--closed {
+  background: #d1fae5;
+  color: #065f46;
+}
