@@ -1,0 +1,77 @@
+.kb-page {
+  flex: 1;
+  padding: 32px 40px;
+  overflow-y: auto;
+  background: #f0f6ff;
+}
+
+.kb-header {
+  margin-bottom: 28px;
+}
+
+.kb-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+}
+
+.kb-subtitle {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.kb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.kb-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.06);
+  position: relative;
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: default;
+}
+
+.kb-card:hover {
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12);
+  transform: translateY(-1px);
+}
+
+.kb-card-body {
+  flex: 1;
+}
+
+.kb-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin-bottom: 6px;
+}
+
+.kb-card-desc {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.kb-card-badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  background: #eff6ff;
+  color: #3b82f6;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+}

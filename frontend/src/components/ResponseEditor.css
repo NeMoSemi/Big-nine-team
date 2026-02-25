@@ -1,0 +1,89 @@
+.response-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.response-editor-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.response-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  font-family: inherit;
+  color: #1f2937;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.response-textarea:focus {
+  border-color: #1e40af;
+}
+
+.response-textarea:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.response-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #1e40af;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #1d3a8a;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.save-msg {
+  font-size: 13px;
+  color: #059669;
+}
+
+.response-sent {
+  padding: 12px;
+  background: #d1fae5;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #065f46;
+  font-weight: 500;
+  text-align: center;
+}
