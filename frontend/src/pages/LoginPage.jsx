@@ -2,21 +2,46 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!email || !password) {
       setError('Введите email и пароль');
       return;
     }
-    // Заглушка: принимаем любой логин
-    localStorage.setItem('auth', 'true');
-    navigate('/tickets');
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (res.status === 401) {
+        setError('Неверный email или пароль');
+        return;
+      }
+      if (!res.ok) {
+        setError('Ошибка сервера, попробуйте позже');
+        return;
+      }
+      const data = await res.json();
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('auth', 'true');
+      navigate('/tickets');
+    } catch {
+      setError('Не удалось подключиться к серверу');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -47,7 +72,9 @@ export default function LoginPage() {
             />
           </div>
           {error && <div className="login-error">{error}</div>}
-          <button type="submit" className="login-btn">Войти</button>
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? 'Вход...' : 'Войти'}
+          </button>
         </form>
       </div>
     </div>

@@ -6,6 +6,7 @@ import TicketForm from '../components/TicketForm';
 import ChatWindow from '../components/ChatWindow';
 import ExportButton from '../components/ExportButton';
 import KnowledgeBasePage from './KnowledgeBasePage';
+import StatsPage from './StatsPage';
 import './TicketsPage.css';
 
 const NAV_TABS = ['Запросы', 'База знаний', 'Статистика'];
@@ -28,12 +29,18 @@ export default function TicketsPage() {
   }, [navigate]);
 
   useEffect(() => {
-    fetchTickets().then((data) => {
-      setTickets(data);
-      setSelected(data[0] || null);
-      setLoading(false);
-    });
-  }, []);
+    fetchTickets()
+      .then((data) => {
+        setTickets(data);
+        setSelected(data[0] || null);
+        setLoading(false);
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('auth');
+        navigate('/');
+      });
+  }, [navigate]);
 
   const onMouseDown = useCallback((e) => {
     dragging.current = true;
@@ -93,12 +100,7 @@ export default function TicketsPage() {
 
       {activeTab === 'База знаний' && <KnowledgeBasePage />}
 
-      {activeTab === 'Статистика' && (
-        <div className="crm-placeholder">
-          <span className="crm-placeholder-icon">📊</span>
-          <span>Раздел «Статистика» будет доступен после интеграции с бэкендом</span>
-        </div>
-      )}
+      {activeTab === 'Статистика' && <StatsPage tickets={tickets} />}
 
       {activeTab === 'Запросы' && (
         loading ? (
