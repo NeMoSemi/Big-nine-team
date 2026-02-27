@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { fetchChat, postChatMessage } from '../api/tickets';
 import './ChatWindow.css';
 
 export default function ChatWindow({ ticket }) {
@@ -7,7 +8,10 @@ export default function ChatWindow({ ticket }) {
   const bottomRef = useRef(null);
 
   useEffect(() => {
-    setMessages(ticket ? [...(ticket.chat_history || [])] : []);
+    if (!ticket) { setMessages([]); return; }
+    fetchChat(ticket.id)
+      .then(setMessages)
+      .catch(() => setMessages([]));
     setInput('');
   }, [ticket?.id]);
 
@@ -15,18 +19,16 @@ export default function ChatWindow({ ticket }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  function handleSend() {
+  async function handleSend() {
     const text = input.trim();
     if (!text) return;
-    const userMsg = { role: 'user', text };
-    setMessages((prev) => [...prev, userMsg]);
     setInput('');
+    const saved = await postChatMessage(ticket.id, 'user', text);
+    setMessages((prev) => [...prev, saved]);
     // Имитация ответа бота
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { role: 'bot', text: 'Понял вас. Обрабатываю запрос, скоро отвечу.' },
-      ]);
+    setTimeout(async () => {
+      const botMsg = await postChatMessage(ticket.id, 'bot', 'Понял вас. Обрабатываю запрос, скоро отвечу.');
+      setMessages((prev) => [...prev, botMsg]);
     }, 800);
   }
 
