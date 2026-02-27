@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, tickets, knowledge_base
+from app.routers import auth, tickets, knowledge_base, telegram
 
 app = FastAPI(
     title="ЭРИС — Служба технической поддержки",
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(tickets.router)
 app.include_router(knowledge_base.router)
+app.include_router(telegram.router)
 
 
 @app.get("/api/health")

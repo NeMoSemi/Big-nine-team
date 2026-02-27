@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchTickets } from '../api/tickets';
+import { fetchTickets, fetchMe, updateProfile } from '../api/tickets';
 import TicketsList from '../components/TicketsList';
 import TicketForm from '../components/TicketForm';
 import ChatWindow from '../components/ChatWindow';
@@ -20,6 +20,11 @@ export default function TicketsPage() {
   const [selected, setSelected] = useState(null);
   const [activeTab, setActiveTab] = useState('Запросы');
   const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [showProfile, setShowProfile] = useState(false);
+  const [profileData, setProfileData] = useState(null);
+  const [tgInput, setTgInput] = useState('');
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [profileMsg, setProfileMsg] = useState('');
   const dragging = useRef(false);
   const startX = useRef(0);
   const startW = useRef(0);
@@ -72,7 +77,31 @@ export default function TicketsPage() {
 
   function handleLogout() {
     localStorage.removeItem('auth');
+    localStorage.removeItem('token');
     navigate('/');
+  }
+
+  async function handleOpenProfile() {
+    const data = await fetchMe();
+    setProfileData(data);
+    setTgInput(data.telegram_id ? String(data.telegram_id) : '');
+    setProfileMsg('');
+    setShowProfile(true);
+  }
+
+  async function handleSaveProfile() {
+    setProfileSaving(true);
+    try {
+      const tgId = tgInput.trim() ? parseInt(tgInput.trim(), 10) : null;
+      const updated = await updateProfile(tgId);
+      setProfileData(updated);
+      setProfileMsg('Сохранено');
+      setTimeout(() => setProfileMsg(''), 2000);
+    } catch {
+      setProfileMsg('Ошибка сохранения');
+    } finally {
+      setProfileSaving(false);
+    }
   }
 
   return (
@@ -94,9 +123,54 @@ export default function TicketsPage() {
         </div>
         <div className="crm-header-right">
           {activeTab === 'Запросы' && <ExportButton tickets={tickets} />}
+          <button className="crm-profile-btn" onClick={handleOpenProfile}>Профиль</button>
           <button className="crm-logout-btn" onClick={handleLogout}>Выйти</button>
         </div>
       </header>
+
+      {showProfile && (
+        <div className="crm-modal-overlay" onClick={() => setShowProfile(false)}>
+          <div className="crm-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="crm-modal-header">
+              <span className="crm-modal-title">Профиль</span>
+              <button className="crm-modal-close" onClick={() => setShowProfile(false)}>✕</button>
+            </div>
+            {profileData && (
+              <div className="crm-modal-body">
+                <div className="crm-profile-row">
+                  <span className="crm-profile-label">Имя</span>
+                  <span className="crm-profile-value">{profileData.full_name}</span>
+                </div>
+                <div className="crm-profile-row">
+                  <span className="crm-profile-label">Email</span>
+                  <span className="crm-profile-value">{profileData.email}</span>
+                </div>
+                <div className="crm-profile-row">
+                  <span className="crm-profile-label">Роль</span>
+                  <span className="crm-profile-value">{profileData.role}</span>
+                </div>
+                <div className="crm-profile-field">
+                  <label className="crm-profile-label">Telegram ID</label>
+                  <input
+                    className="crm-profile-input"
+                    type="number"
+                    placeholder="Ваш числовой Telegram ID"
+                    value={tgInput}
+                    onChange={(e) => setTgInput(e.target.value)}
+                  />
+                  <span className="crm-profile-hint">Узнать ID можно через @userinfobot в Telegram</span>
+                </div>
+                <div className="crm-profile-actions">
+                  <button className="crm-profile-save" onClick={handleSaveProfile} disabled={profileSaving}>
+                    {profileSaving ? 'Сохранение...' : 'Сохранить'}
+                  </button>
+                  {profileMsg && <span className="crm-profile-msg">{profileMsg}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {activeTab === 'База знаний' && <KnowledgeBasePage />}
 

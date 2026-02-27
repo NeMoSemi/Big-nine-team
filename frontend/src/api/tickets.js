@@ -51,3 +51,19 @@ export async function postChatMessage(ticketId, role, text) {
   if (!res.ok) throw new Error('Server error');
   return await res.json();
 }
+
+export async function fetchMe() {
+  const res = await fetch(`${API_BASE}/api/auth/me`, { headers: authHeaders() });
+  if (!res.ok) throw new Error('Server error');
+  return await res.json();
+}
+
+export async function updateProfile(telegram_id) {
+  const res = await fetch(`${API_BASE}/api/auth/me`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...authHeaders() },
+    body: JSON.stringify({ telegram_id }),
+  });
+  if (!res.ok) throw new Error('Server error');
+  return await res.json();
+}

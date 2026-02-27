@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import String, DateTime, func
+from sqlalchemy import String, DateTime, BigInteger, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -13,6 +13,7 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[str] = mapped_column(String(50), default="operator")  # operator | admin
+    telegram_id: Mapped[int | None] = mapped_column(BigInteger, unique=True, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     tickets: Mapped[list["Ticket"]] = relationship("Ticket", back_populates="assignee", foreign_keys="Ticket.assigned_to")
