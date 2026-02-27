@@ -8,6 +8,11 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 8  # 8 часов
 
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
+    BOT_SECRET: str = "change_me_bot_secret"
+
+    @property
+    def bot_secret(self) -> str:
+        return self.BOT_SECRET
 
     # Email (IMAP/SMTP) — заполнить на хакатоне
     IMAP_HOST: str = ""

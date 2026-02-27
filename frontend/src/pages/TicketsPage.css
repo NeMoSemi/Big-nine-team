@@ -87,6 +87,160 @@
   color: #fff;
 }
 
+.crm-profile-btn {
+  padding: 5px 13px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  transition: all 0.12s;
+  font-family: inherit;
+}
+
+.crm-profile-btn:hover {
+  background: rgba(255,255,255,0.22);
+  color: #fff;
+}
+
+/* Modal */
+.crm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.crm-modal {
+  background: #fff;
+  border-radius: 14px;
+  width: 420px;
+  max-width: 95vw;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+}
+
+.crm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.crm-modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #1e3a8a;
+}
+
+.crm-modal-close {
+  background: none;
+  border: none;
+  font-size: 15px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.12s;
+}
+
+.crm-modal-close:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.crm-modal-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.crm-profile-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.crm-profile-label {
+  font-size: 12px;
+  color: #64748b;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.crm-profile-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.crm-profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 6px;
+}
+
+.crm-profile-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #1e293b;
+  outline: none;
+  transition: border-color 0.12s;
+}
+
+.crm-profile-input:focus {
+  border-color: #3b82f6;
+}
+
+.crm-profile-hint {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.crm-profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.crm-profile-save {
+  padding: 8px 20px;
+  background: #1e3a8a;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.crm-profile-save:hover {
+  background: #2563eb;
+}
+
+.crm-profile-save:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.crm-profile-msg {
+  font-size: 13px;
+  color: #22c55e;
+  font-weight: 600;
+}
+
 /* ── Body ────────────────────────────────────────── */
 .crm-body {
   display: flex;
