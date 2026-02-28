@@ -9,6 +9,7 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: str = "http://localhost:5173,http://localhost:3000"
     BOT_SECRET: str = "change_me_bot_secret"
+    GROQ_API_KEY: str = ""
 
     @property
     def bot_secret(self) -> str:
@@ -28,6 +29,7 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        extra = "allow"
 
 
 settings = Settings()
