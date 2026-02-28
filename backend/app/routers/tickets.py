@@ -1,17 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.database import get_db
+from app.database import get_db, AsyncSessionLocal
 from app.models.ticket import Ticket
 from app.models.chat_message import ChatMessage
 from app.schemas.ticket import TicketOut, TicketUpdate, TicketCreate
 from app.schemas.chat import ChatMessageOut, ChatMessageCreate
 from app.routers.auth import get_current_user
 from app.models.user import User
+from app.services.ai_service import analyze_ticket_with_ai
 
 router = APIRouter(prefix="/api/tickets", tags=["tickets"])
+
+async def process_ticket_ai(ticket_id: int, ticket_text: str):
+    """Background task to analyze ticket with AI and update DB."""
+    ai_result = await analyze_ticket_with_ai(ticket_text)
+    
+    async with AsyncSessionLocal() as session:
+        ticket = await session.get(Ticket, ticket_id)
+        if ticket:
+            ticket.sentiment = ai_result.get("sentiment")
+            ticket.category = ai_result.get("category")
+            ticket.ai_response = ai_result.get("draft_response")
+            
+            # If AI is uncertain or it's very negative, we might flag it, 
+            # here we just rely on standard fields updated.
+            await session.commit()
 
 
 # ── Список заявок ─────────────────────────────────────
@@ -38,6 +54,7 @@ async def list_tickets(
 @router.post("", response_model=TicketOut, status_code=status.HTTP_201_CREATED)
 async def create_ticket(
     payload: TicketCreate,
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user),
 ):
@@ -45,6 +62,11 @@ async def create_ticket(
     db.add(ticket)
     await db.commit()
     await db.refresh(ticket)
+    
+    ticket_text = ticket.original_email or ticket.summary or ""
+    if ticket_text:
+        background_tasks.add_task(process_ticket_ai, ticket.id, ticket_text)
+        
     return ticket
 
 

@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: eris
       POSTGRES_PASSWORD: eris_secret
     ports:
-      - "5432:5432"
+      - "5443:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -24,6 +24,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file: ./backend/.env
     environment:
       DATABASE_URL: postgresql+asyncpg://eris:eris_secret@db:5432/eris
       SECRET_KEY: change_me_in_production
@@ -54,7 +55,7 @@ services:
       - backend
     env_file: ./tg_notification_bot/.env
     ports:
-      - "8081:8081"
+      - "8182:8183"
     volumes:
       - ./tg_notification_bot:/app
 
