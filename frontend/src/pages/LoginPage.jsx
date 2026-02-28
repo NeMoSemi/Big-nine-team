@@ -20,10 +20,13 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     try {
+      const form = new URLSearchParams();
+      form.append('username', email);
+      form.append('password', password);
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString(),
       });
       if (res.status === 401) {
         setError('Неверный email или пароль');
